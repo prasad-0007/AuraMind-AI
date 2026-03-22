@@ -3,78 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraMind AI | Ignition HackVerse 2k26</title>
-    
+    <title>AuraMind AI Pro | HackVerse 2k26 Edition</title>
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
         body { font-family: 'Space+Grotesk', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #video { transform: rotateY(180deg); width: 100%; border-radius: 1rem; background: #1e293b; }
+        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        #video { transform: rotateY(180deg); width: 100%; border-radius: 1rem; border: 2px solid #334155; }
+        .stats-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 md:p-10">
+<body class="min-h-screen flex flex-col items-center p-4">
 
-    <header class="text-center mb-8">
-        <h1 class="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">
-            AuraMind AI
-        </h1>
-        <p class="text-slate-400 mt-2">Future of Learning & Well-being | Pune 2k26</p>
+    <header class="text-center mt-6 mb-8">
+        <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent italic">AuraMind Pro</h1>
+        <p class="text-slate-500 tracking-widest uppercase text-xs mt-2 italic">Ignition HackVerse 2k26 | Pune</p>
     </header>
 
     <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl w-full">
-        <div class="glass p-4 rounded-3xl shadow-2xl">
-            <div class="flex justify-between items-center mb-4 px-2">
-                <span class="flex items-center gap-2"><span id="live-dot" class="w-3 h-3 bg-slate-500 rounded-full"></span> <span id="status-text">INITIALIZING AI...</span></span>
-                <span id="stress-badge" class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-sm font-bold border border-slate-700">WAITING</span>
+        <div class="glass p-5 rounded-3xl relative">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center gap-2">
+                    <div id="status-light" class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                    <span id="status-msg" class="text-xs font-mono">READY TO LAUNCH</span>
+                </div>
+                <div id="emotion-tag" class="text-[10px] bg-slate-800 px-2 py-1 rounded border border-slate-700">IDLE</div>
             </div>
             <video id="video" autoplay muted playsinline></video>
+            
+            <div id="loader-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 rounded-3xl z-10 transition-opacity duration-500 p-6 text-center">
+                <h2 class="text-2xl font-bold mb-4">Welcome to the Future of Learning</h2>
+                <button onclick="forceStart()" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-bold shadow-xl transition-all transform hover:scale-105 active:scale-95">
+                    START STUDY SESSION
+                </button>
+            </div>
         </div>
 
         <div class="flex flex-col gap-6">
-            <div class="glass p-6 rounded-3xl">
-                <h3 class="text-xl font-bold mb-4 text-blue-400">AI Tutor Insights</h3>
-                <p id="tutor-text" class="text-lg leading-relaxed italic text-slate-300">
-                    Loading models from neural network... please wait.
-                </p>
+            <div class="glass p-8 rounded-3xl border-l-4 border-blue-500">
+                <h3 class="text-blue-400 font-bold uppercase text-xs tracking-widest mb-2">Live AI Tutor</h3>
+                <p id="tutor-text" class="text-xl font-medium min-h-[60px]">Waiting for session to begin...</p>
+                
+                <div class="mt-8 flex gap-4">
+                    <button onclick="endSession()" id="end-btn" class="hidden bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/50 px-6 py-2 rounded-xl text-sm font-bold transition-all">
+                        END SESSION & REPORT
+                    </button>
+                </div>
             </div>
 
-            <div class="glass p-6 rounded-3xl border-l-4 border-emerald-500">
-                <h3 class="font-bold text-emerald-400 uppercase text-sm tracking-widest">System Load</h3>
-                <div class="w-full bg-slate-800 h-2 mt-4 rounded-full overflow-hidden">
-                    <div id="stress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+            <div class="glass p-8 rounded-3xl border-l-4 border-emerald-500">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <h3 class="text-emerald-400 font-bold uppercase text-sm tracking-widest">Cognitive Load</h3>
+                        <p id="state-text" class="text-2xl font-bold mt-1 text-slate-400 italic">Optimizing...</p>
+                    </div>
+                    <div id="stress-percent" class="text-4xl font-black text-slate-800">0%</div>
                 </div>
-                <p id="learning-mode" class="mt-4 text-slate-400">Status: Models Loading...</p>
+                <div class="w-full bg-slate-800 h-3 mt-4 rounded-full overflow-hidden">
+                    <div id="stress-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 10%"></div>
+                </div>
             </div>
         </div>
     </main>
 
+    <div id="report-modal" class="fixed inset-0 bg-slate-950/95 z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-lg w-full p-10 rounded-[3rem] text-center border-2 border-blue-500/30">
+            <h2 class="text-3xl font-bold text-white mb-2 italic">Session Analytics</h2>
+            <p class="text-slate-400 mb-8 uppercase text-xs tracking-widest">Data-Driven Wellness Report</p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-8">
+                <div class="stats-card p-6 rounded-3xl border border-slate-700">
+                    <span class="text-slate-500 text-xs">AVG STRESS</span>
+                    <p id="avg-stress" class="text-3xl font-black text-blue-400">0%</p>
+                </div>
+                <div class="stats-card p-6 rounded-3xl border border-slate-700">
+                    <span class="text-slate-500 text-xs">PEAK STATE</span>
+                    <p id="peak-state" class="text-2xl font-black text-emerald-400">CALM</p>
+                </div>
+            </div>
+
+            <div class="bg-blue-500/10 p-6 rounded-3xl border border-blue-500/20 mb-8">
+                <h4 class="text-blue-400 font-bold text-sm mb-2 uppercase">AI Counselor Recommendation</h4>
+                <p id="report-advice" class="text-slate-300 italic italic">Great consistency!</p>
+            </div>
+
+            <button onclick="location.reload()" class="bg-slate-100 text-slate-950 font-bold px-10 py-3 rounded-full hover:bg-white transition-all">
+                START NEW SESSION
+            </button>
+        </div>
+    </div>
+
     <script>
         const video = document.getElementById('video');
-        const statusText = document.getElementById('status-text');
-        const liveDot = document.getElementById('live-dot');
         const tutorText = document.getElementById('tutor-text');
-        const stressBadge = document.getElementById('stress-badge');
         const stressBar = document.getElementById('stress-bar');
+        const stressPercent = document.getElementById('stress-percent');
+        const stateText = document.getElementById('state-text');
+        const emotionTag = document.getElementById('emotion-tag');
+        const loaderOverlay = document.getElementById('loader-overlay');
+        
+        // Data Tracking
+        let stressData = [];
+        let sessionActive = false;
 
-        async function init() {
+        async function forceStart() {
+            loaderOverlay.style.opacity = '0';
+            setTimeout(() => loaderOverlay.style.display = 'none', 500);
+            
             try {
-                console.log("Loading Models...");
-                // Using a specific versioned CDN to avoid 'faceapi is not defined'
                 const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
-                
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
-                ]);
-
-                console.log("Models Loaded Successfully!");
+                await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+                await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
                 startVideo();
-            } catch (error) {
-                console.error("Model Load Error:", error);
-                tutorText.innerText = "Error loading AI models. Please check internet connection.";
+            } catch (e) {
+                tutorText.innerText = "Error loading AI models. Check internet connection.";
             }
         }
 
@@ -82,47 +125,60 @@
             navigator.mediaDevices.getUserMedia({ video: { width: 640 } })
                 .then(stream => {
                     video.srcObject = stream;
-                    statusText.innerText = "AI ACTIVE";
-                    liveDot.classList.replace('bg-slate-500', 'bg-red-500');
-                    liveDot.classList.add('animate-pulse');
-                    tutorText.innerText = "Hello! I am monitoring your focus. Let's start learning.";
-                    analyze();
-                })
-                .catch(err => {
-                    console.error("Camera Error:", err);
-                    tutorText.innerText = "Camera access denied. Please allow camera to use AuraMind.";
+                    sessionActive = true;
+                    document.getElementById('end-btn').classList.remove('hidden');
+                    document.getElementById('status-msg').innerText = "SESSION LIVE";
+                    document.getElementById('status-light').classList.replace('bg-yellow-500', 'bg-red-500');
+                    beginAnalysis();
                 });
         }
 
-        async function analyze() {
+        function beginAnalysis() {
             setInterval(async () => {
-                if (video.paused || video.ended) return;
+                if (!sessionActive || video.paused) return;
 
-                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                const detections = await faceapi.detectAllFaces(video, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })).withFaceExpressions();
 
                 if (detections.length > 0) {
-                    const expressions = detections[0].expressions;
-                    const stressLevel = expressions.sad + expressions.angry + expressions.fearful;
+                    const e = detections[0].expressions;
+                    const stressScore = (e.angry + e.sad + e.fearful) * 100;
+                    stressData.push(stressScore);
 
-                    if (stressLevel > 0.4) {
-                        updateUI("STRESSED", "red", "खूप ताण जाणवत आहे का? थोडा वेळ विश्रांती घ्या.", "80%");
+                    const sorted = Object.entries(e).sort((a,b) => b[1] - a[1]);
+                    emotionTag.innerText = sorted[0][0].toUpperCase();
+                    stressPercent.innerText = `${Math.round(stressScore)}%`;
+                    stressBar.style.width = `${Math.max(10, stressScore)}%`;
+
+                    if (stressScore > 30) {
+                        updateUI("STRESSED", "red", "खूप ताण जाणवत आहे का? थोडा वेळ विश्रांती घ्या.", "Fatigue Alert");
                     } else {
-                        updateUI("CALM", "emerald", "Good focus! You are doing great.", "20%");
+                        updateUI("CALM", "emerald", "Good focus! You are in the top 10% of learners.", "Deep Focus");
                     }
                 }
-            }, 1000);
+            }, 800);
         }
 
-        function updateUI(status, color, msg, width) {
-            stressBadge.innerText = status;
-            stressBadge.className = `px-3 py-1 rounded-full bg-${color}-500/20 text-${color}-400 text-sm font-bold border border-${color}-500/50`;
+        function updateUI(status, color, msg, state) {
+            stateText.innerText = state;
+            stateText.className = `text-2xl font-bold mt-1 text-${color}-400 italic`;
             tutorText.innerText = msg;
-            stressBar.style.width = width;
-            stressBar.className = `bg-${color}-500 h-full transition-all duration-500`;
+            stressBar.className = `h-full bg-${color}-500 transition-all duration-300`;
         }
 
-        // Run Init on Load
-        window.onload = init;
+        function endSession() {
+            sessionActive = false;
+            const avg = stressData.length ? (stressData.reduce((a,b) => a + b) / stressData.length).toFixed(1) : 0;
+            
+            document.getElementById('avg-stress').innerText = `${avg}%`;
+            document.getElementById('peak-state').innerText = avg > 30 ? "STRESSED" : "FOCUSED";
+            
+            let finalAdvice = avg > 30 
+                ? "तुमचा ताण जास्त होता. अभ्यासाच्या पद्धतीत बदल करा आणि पुरेशी झोप घ्या. (Your stress was high. Take care of your sleep.)"
+                : "तुमची एकाग्रता उत्तम आहे! असेच चालू ठेवा. (Excellent focus! Keep it up.)";
+            
+            document.getElementById('report-advice').innerText = finalAdvice;
+            document.getElementById('report-modal').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>
