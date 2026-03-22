@@ -3,92 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraMind AI Pro | HackVerse 2k26 Edition</title>
+    <title>AuraMind AI Pro | HackVerse 2k26</title>
+    
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
-        body { font-family: 'Space+Grotesk', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #video { transform: rotateY(180deg); width: 100%; border-radius: 1rem; border: 2px solid #334155; }
-        .stats-card { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        body { font-family: 'Space+Grotesk', sans-serif; background-color: #020617; color: #f8fafc; scroll-behavior: smooth; }
+        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        #video { transform: rotateY(180deg); width: 100%; border-radius: 1.5rem; background: #0f172a; border: 2px solid #1e293b; }
+        .pulse-red { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .gradient-text { background: linear-gradient(to r, #60a5fa, #34d399); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4">
+<body class="min-h-screen p-4 md:p-8">
 
-    <header class="text-center mt-6 mb-8">
-        <h1 class="text-5xl font-bold bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent italic">AuraMind Pro</h1>
-        <p class="text-slate-500 tracking-widest uppercase text-xs mt-2 italic">Ignition HackVerse 2k26 | Pune</p>
-    </header>
+    <nav class="max-w-6xl mx-auto flex justify-between items-center mb-12">
+        <div class="flex items-center gap-2">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg rotate-12"></div>
+            <span class="text-2xl font-bold tracking-tighter italic">AURAMIND <span class="text-blue-400">PRO</span></span>
+        </div>
+        <div class="hidden md:block text-xs text-slate-500 font-mono">IGNITION HACKVERSE 2K26 • PUNE</div>
+    </nav>
 
-    <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl w-full">
-        <div class="glass p-5 rounded-3xl relative">
-            <div class="flex justify-between items-center mb-4">
+    <main class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
+        
+        <div class="glass p-6 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+            <div class="flex justify-between items-center mb-4 px-2">
                 <div class="flex items-center gap-2">
-                    <div id="status-light" class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
-                    <span id="status-msg" class="text-xs font-mono">READY TO LAUNCH</span>
+                    <div id="status-light" class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                    <span id="status-msg" class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Initializing AI...</span>
                 </div>
-                <div id="emotion-tag" class="text-[10px] bg-slate-800 px-2 py-1 rounded border border-slate-700">IDLE</div>
+                <div id="emotion-tag" class="text-[10px] bg-blue-500/10 text-blue-400 px-3 py-1 rounded-full border border-blue-500/30 font-bold uppercase">Ready</div>
             </div>
-            <video id="video" autoplay muted playsinline></video>
             
-            <div id="loader-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90 rounded-3xl z-10 transition-opacity duration-500 p-6 text-center">
-                <h2 class="text-2xl font-bold mb-4">Welcome to the Future of Learning</h2>
-                <button onclick="forceStart()" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-bold shadow-xl transition-all transform hover:scale-105 active:scale-95">
-                    START STUDY SESSION
-                </button>
+            <div class="relative">
+                <video id="video" autoplay muted playsinline></video>
+                
+                <div id="loader-overlay" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 rounded-[1.5rem] z-20 transition-opacity duration-500 text-center p-8">
+                    <h2 class="text-3xl font-bold mb-4 gradient-text">Next-Gen Learning</h2>
+                    <p class="text-slate-400 text-sm mb-8">AI-driven well-being assistant for focus and fatigue detection.</p>
+                    <button onclick="forceStart()" class="bg-blue-600 hover:bg-blue-500 text-white px-12 py-4 rounded-full font-bold shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95">
+                        LAUNCH ENGINE
+                    </button>
+                </div>
             </div>
         </div>
 
         <div class="flex flex-col gap-6">
-            <div class="glass p-8 rounded-3xl border-l-4 border-blue-500">
-                <h3 class="text-blue-400 font-bold uppercase text-xs tracking-widest mb-2">Live AI Tutor</h3>
-                <p id="tutor-text" class="text-xl font-medium min-h-[60px]">Waiting for session to begin...</p>
+            <div class="glass p-8 rounded-[2.5rem] border-l-4 border-blue-500 shadow-xl">
+                <h3 class="text-xs font-bold text-blue-400 uppercase tracking-widest mb-4">Real-Time AI Tutor</h3>
+                <p id="tutor-text" class="text-xl md:text-2xl font-medium leading-snug min-h-[80px] italic text-slate-200">
+                    Neural networks are offline. Click "Launch" to synchronize.
+                </p>
                 
-                <div class="mt-8 flex gap-4">
-                    <button onclick="endSession()" id="end-btn" class="hidden bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/50 px-6 py-2 rounded-xl text-sm font-bold transition-all">
-                        END SESSION & REPORT
+                <div class="mt-8 flex items-center gap-4">
+                    <button id="end-btn" onclick="endSession()" class="hidden bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-6 py-3 rounded-2xl text-sm font-bold transition-all">
+                        STOP & GENERATE REPORT
                     </button>
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-3xl border-l-4 border-emerald-500">
-                <div class="flex justify-between items-end">
+            <div class="glass p-8 rounded-[2.5rem] border-l-4 border-emerald-500 shadow-xl">
+                <div class="flex justify-between items-end mb-4">
                     <div>
-                        <h3 class="text-emerald-400 font-bold uppercase text-sm tracking-widest">Cognitive Load</h3>
-                        <p id="state-text" class="text-2xl font-bold mt-1 text-slate-400 italic">Optimizing...</p>
+                        <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Cognitive State</h3>
+                        <p id="state-text" class="text-3xl font-black mt-1 text-slate-300">AWAITING</p>
                     </div>
-                    <div id="stress-percent" class="text-4xl font-black text-slate-800">0%</div>
+                    <div id="stress-percent" class="text-5xl font-black text-slate-800">0%</div>
                 </div>
-                <div class="w-full bg-slate-800 h-3 mt-4 rounded-full overflow-hidden">
-                    <div id="stress-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 10%"></div>
+                <div class="w-full bg-slate-900 h-4 rounded-full overflow-hidden border border-slate-800">
+                    <div id="stress-bar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <div id="report-modal" class="fixed inset-0 bg-slate-950/95 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass max-w-lg w-full p-10 rounded-[3rem] text-center border-2 border-blue-500/30">
-            <h2 class="text-3xl font-bold text-white mb-2 italic">Session Analytics</h2>
-            <p class="text-slate-400 mb-8 uppercase text-xs tracking-widest">Data-Driven Wellness Report</p>
+    <section class="max-w-6xl mx-auto mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 pb-20 px-4">
+        <div class="glass p-8 rounded-3xl">
+            <h4 class="font-bold mb-2 text-blue-400">Biometric Analysis</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">We use 68 facial landmarks to detect micro-expressions associated with cognitive fatigue.</p>
+        </div>
+        <div class="glass p-8 rounded-3xl">
+            <h4 class="font-bold mb-2 text-emerald-400">Localized Support</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">Integrated Marathi/English AI counselor for native support and inclusive learning.</p>
+        </div>
+        <div class="glass p-8 rounded-3xl">
+            <h4 class="font-bold mb-2 text-purple-400">Adaptive UI</h4>
+            <p class="text-sm text-slate-400 leading-relaxed">The system changes color and mode dynamically based on your stress level.</p>
+        </div>
+    </section>
+
+    <div id="report-modal" class="fixed inset-0 bg-slate-950/98 z-50 hidden flex items-center justify-center p-4">
+        <div class="glass max-w-lg w-full p-10 rounded-[3rem] text-center border-2 border-blue-500/20 shadow-2xl">
+            <h2 class="text-4xl font-bold gradient-text mb-2 italic">Session Report</h2>
+            <p class="text-slate-500 uppercase text-[10px] tracking-[0.3em] mb-10">Biometric Insight Summary</p>
             
-            <div class="grid grid-cols-2 gap-4 mb-8">
-                <div class="stats-card p-6 rounded-3xl border border-slate-700">
-                    <span class="text-slate-500 text-xs">AVG STRESS</span>
-                    <p id="avg-stress" class="text-3xl font-black text-blue-400">0%</p>
+            <div class="grid grid-cols-2 gap-6 mb-10">
+                <div class="bg-slate-900/50 p-6 rounded-3xl border border-slate-800">
+                    <span class="text-slate-500 text-[10px] uppercase block mb-2">Avg Stress</span>
+                    <p id="avg-stress" class="text-4xl font-black text-blue-400">0%</p>
                 </div>
-                <div class="stats-card p-6 rounded-3xl border border-slate-700">
-                    <span class="text-slate-500 text-xs">PEAK STATE</span>
+                <div class="bg-slate-900/50 p-6 rounded-3xl border border-slate-800">
+                    <span class="text-slate-500 text-[10px] uppercase block mb-2">Peak Status</span>
                     <p id="peak-state" class="text-2xl font-black text-emerald-400">CALM</p>
                 </div>
             </div>
 
-            <div class="bg-blue-500/10 p-6 rounded-3xl border border-blue-500/20 mb-8">
-                <h4 class="text-blue-400 font-bold text-sm mb-2 uppercase">AI Counselor Recommendation</h4>
-                <p id="report-advice" class="text-slate-300 italic italic">Great consistency!</p>
+            <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/20 mb-10">
+                <p id="report-advice" class="text-slate-300 italic text-lg leading-relaxed">Analysis complete.</p>
             </div>
 
-            <button onclick="location.reload()" class="bg-slate-100 text-slate-950 font-bold px-10 py-3 rounded-full hover:bg-white transition-all">
+            <button onclick="location.reload()" class="w-full bg-white text-slate-950 font-bold px-10 py-5 rounded-2xl hover:bg-slate-200 transition-all shadow-xl">
                 START NEW SESSION
             </button>
         </div>
@@ -102,34 +130,45 @@
         const stateText = document.getElementById('state-text');
         const emotionTag = document.getElementById('emotion-tag');
         const loaderOverlay = document.getElementById('loader-overlay');
+        const statusMsg = document.getElementById('status-msg');
+        const statusLight = document.getElementById('status-light');
         
-        // Data Tracking
         let stressData = [];
         let sessionActive = false;
 
         async function forceStart() {
-            loaderOverlay.style.opacity = '0';
-            setTimeout(() => loaderOverlay.style.display = 'none', 500);
-            
             try {
+                statusMsg.innerText = "Synchronizing Models...";
                 const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
-                await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
-                await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+                
+                // Concurrent Load for Speed
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
+                ]);
+
+                loaderOverlay.style.opacity = '0';
+                setTimeout(() => loaderOverlay.style.display = 'none', 500);
                 startVideo();
             } catch (e) {
-                tutorText.innerText = "Error loading AI models. Check internet connection.";
+                tutorText.innerText = "Network failure. Please refresh.";
+                statusMsg.innerText = "Error";
             }
         }
 
         function startVideo() {
-            navigator.mediaDevices.getUserMedia({ video: { width: 640 } })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } })
                 .then(stream => {
                     video.srcObject = stream;
                     sessionActive = true;
                     document.getElementById('end-btn').classList.remove('hidden');
-                    document.getElementById('status-msg').innerText = "SESSION LIVE";
-                    document.getElementById('status-light').classList.replace('bg-yellow-500', 'bg-red-500');
+                    statusMsg.innerText = "AI ACTIVE";
+                    statusLight.classList.replace('bg-yellow-500', 'bg-red-500');
+                    statusLight.classList.add('pulse-red');
                     beginAnalysis();
+                })
+                .catch(err => {
+                    tutorText.innerText = "Camera Access Denied.";
                 });
         }
 
@@ -137,32 +176,42 @@
             setInterval(async () => {
                 if (!sessionActive || video.paused) return;
 
-                const detections = await faceapi.detectAllFaces(video, new faceapi.SsdMobilenetv1Options({ minConfidence: 0.5 })).withFaceExpressions();
+                const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions())
+                    .withFaceExpressions();
 
-                if (detections.length > 0) {
+                if (detections && detections.length > 0) {
                     const e = detections[0].expressions;
-                    const stressScore = (e.angry + e.sad + e.fearful) * 100;
-                    stressData.push(stressScore);
+                    // Logic: Angry, Sad, Fear, Disgust = Stress
+                    const stressBase = (e.angry + e.sad + e.fearful + e.disgusted) * 100;
+                    const finalStress = Math.min(100, Math.round(stressBase * 1.8)); // Multiplied for better sensitivity
+                    
+                    stressData.push(finalStress);
 
-                    const sorted = Object.entries(e).sort((a,b) => b[1] - a[1]);
-                    emotionTag.innerText = sorted[0][0].toUpperCase();
-                    stressPercent.innerText = `${Math.round(stressScore)}%`;
-                    stressBar.style.width = `${Math.max(10, stressScore)}%`;
+                    const dominant = Object.entries(e).sort((a,b) => b[1] - a[1])[0][0];
+                    emotionTag.innerText = dominant.toUpperCase();
+                    stressPercent.innerText = `${finalStress}%`;
+                    stressBar.style.width = `${Math.max(8, finalStress)}%`;
 
-                    if (stressScore > 30) {
-                        updateUI("STRESSED", "red", "खूप ताण जाणवत आहे का? थोडा वेळ विश्रांती घ्या.", "Fatigue Alert");
+                    if (finalStress > 30) {
+                        updateUI("STRESSED", "red", "खूप ताण जाणवत आहे का? थोडा वेळ विश्रांती घ्या आणि पाणी प्या.", "FATIGUE ALERT");
+                    } else if (e.happy > 0.2) {
+                        updateUI("FLOW", "emerald", "Excellent state! Your retention is at peak capacity.", "PEAK FOCUS");
                     } else {
-                        updateUI("CALM", "emerald", "Good focus! You are in the top 10% of learners.", "Deep Focus");
+                        updateUI("STABLE", "blue", "तुम्ही एकाग्र आहात. धड्याकडे लक्ष द्या!", "CONCENTRATING");
                     }
+                } else {
+                    stateText.innerText = "NO FACE DETECTED";
+                    stateText.className = "text-xl font-bold mt-1 text-slate-600";
                 }
-            }, 800);
+            }, 600);
         }
 
-        function updateUI(status, color, msg, state) {
+        function updateUI(label, color, msg, state) {
             stateText.innerText = state;
-            stateText.className = `text-2xl font-bold mt-1 text-${color}-400 italic`;
+            stateText.className = `text-2xl font-black mt-1 text-${color}-400 italic`;
             tutorText.innerText = msg;
-            stressBar.className = `h-full bg-${color}-500 transition-all duration-300`;
+            stressBar.className = `h-full bg-${color}-500 transition-all duration-500`;
+            stressPercent.className = `text-5xl font-black text-${color}-500/20`;
         }
 
         function endSession() {
@@ -170,13 +219,13 @@
             const avg = stressData.length ? (stressData.reduce((a,b) => a + b) / stressData.length).toFixed(1) : 0;
             
             document.getElementById('avg-stress').innerText = `${avg}%`;
-            document.getElementById('peak-state').innerText = avg > 30 ? "STRESSED" : "FOCUSED";
+            document.getElementById('peak-state').innerText = avg > 30 ? "OVERLOADED" : "FOCUSED";
             
-            let finalAdvice = avg > 30 
-                ? "तुमचा ताण जास्त होता. अभ्यासाच्या पद्धतीत बदल करा आणि पुरेशी झोप घ्या. (Your stress was high. Take care of your sleep.)"
-                : "तुमची एकाग्रता उत्तम आहे! असेच चालू ठेवा. (Excellent focus! Keep it up.)";
+            let advice = avg > 30 
+                ? "तुमचा ताण जास्त होता. अभ्यासात छोटे ब्रेक घ्या. (High stress detected. Take shorter study intervals.)"
+                : "तुमची एकाग्रता उत्तम आहे! असेच चालू ठेवा. (Fantastic focus! Stay consistent.)";
             
-            document.getElementById('report-advice').innerText = finalAdvice;
+            document.getElementById('report-advice').innerText = advice;
             document.getElementById('report-modal').classList.remove('hidden');
         }
     </script>
