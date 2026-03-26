@@ -1,180 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AuraMind AI Hyper-Fast | Ignition 2k26</title>
-    <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap');
-        body { font-family: 'Space+Grotesk', sans-serif; background-color: #020617; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        #video { transform: rotateY(180deg); width: 100%; border-radius: 1.5rem; background: #000; }
-        .glow-emerald { box-shadow: 0 0 15px rgba(52, 211, 153, 0.1); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuraMind PRO v2.1 | Biometric Focus Tracker</title>
+  <!-- face-api (deferred so it doesn't block render) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
+  <!-- Your improved stylesheet -->
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="min-h-screen p-4 md:p-8 flex flex-col items-center">
+<body>
 
-    <header class="text-center mb-10">
-        <h1 class="text-4xl font-black tracking-tighter italic text-blue-400">AURAMIND <span class="text-white">PRO v2.1</span></h1>
-        <p class="text-slate-500 text-[10px] tracking-[0.4em] uppercase">High-Speed Biometric Analysis</p>
-    </header>
+<div class="app-wrapper">
 
-    <main class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="glass p-4 rounded-[2rem] relative glow-emerald">
-            <div class="flex justify-between items-center mb-3 px-2">
-                <div class="flex items-center gap-2">
-                    <div id="status-light" class="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
-                    <span id="status-msg" class="text-[9px] font-bold uppercase text-slate-400">Loading AI...</span>
-                </div>
-                <div id="emotion-tag" class="text-[9px] font-mono bg-blue-500/20 text-blue-300 px-2 py-1 rounded">SCANNING</div>
-            </div>
-            <div class="relative">
-                <video id="video" autoplay muted playsinline></video>
-                <div id="loader-overlay" class="absolute inset-0 flex items-center justify-center bg-slate-950/90 rounded-[1.5rem] z-20 transition-opacity duration-300">
-                    <button onclick="forceStart()" class="bg-blue-600 px-8 py-3 rounded-full font-bold text-sm hover:scale-105 active:scale-95 transition-all">START ENGINE</button>
-                </div>
-            </div>
+  <!-- ── Header ── -->
+  <header class="app-header">
+    <h1 class="logo">
+      <span class="highlight">AURAMIND</span>
+      <span class="version">PRO v2.1</span>
+    </h1>
+    <div class="header-rule"></div>
+    <p class="tagline">High-Speed Biometric Focus Analysis</p>
+  </header>
+
+  <!-- ── Main Grid ── -->
+  <main class="main-grid">
+
+    <!-- Left: Camera Panel -->
+    <div id="camera-panel" class="glass camera-panel">
+      <div class="cam-header">
+        <div class="status-indicator">
+          <div id="status-dot" class="status-dot idle"></div>
+          <span id="status-label" class="status-label">Loading AI…</span>
         </div>
+        <div id="emotion-tag" class="emotion-badge">SCANNING</div>
+      </div>
 
-        <div class="flex flex-col gap-6">
-            <div class="glass p-8 rounded-[2rem] border-l-4 border-blue-500">
-                <h3 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">AI Counselor</h3>
-                <p id="tutor-text" class="text-xl font-medium leading-tight text-slate-200 min-h-[60px]">Ready to begin.</p>
-                <button id="end-btn" onclick="endSession()" class="hidden mt-6 bg-red-500/10 text-red-400 border border-red-500/20 px-4 py-2 rounded-xl text-xs font-bold uppercase">End Session</button>
-            </div>
+      <div class="video-wrapper">
+        <video id="video" autoplay muted playsinline aria-label="Camera feed"></video>
 
-            <div class="glass p-8 rounded-[2rem] border-l-4 border-emerald-500">
-                <div class="flex justify-between items-end mb-4">
-                    <div>
-                        <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Cognitive Stress</h3>
-                        <p id="state-text" class="text-2xl font-black mt-1 text-slate-300 uppercase italic tracking-tighter">Standby</p>
-                    </div>
-                    <div id="stress-percent" class="text-4xl font-black text-slate-700">0%</div>
-                </div>
-                <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
-                    <div id="stress-bar" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-            </div>
+        <!-- Loader Overlay -->
+        <div id="loader-overlay">
+          <div id="loader-icon" class="loader-icon" aria-hidden="true"></div>
+          <p id="loader-msg">Ready when you are.</p>
+          <button class="start-btn" onclick="forceStart()">START ENGINE</button>
         </div>
-    </main>
+      </div>
 
-    <div id="report-modal" class="fixed inset-0 bg-slate-950/98 z-50 hidden flex items-center justify-center p-4">
-        <div class="glass max-w-sm w-full p-8 rounded-[2rem] text-center">
-            <h2 class="text-2xl font-bold mb-4">Session Analytics</h2>
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-slate-900 p-4 rounded-2xl"><span class="text-[10px] text-slate-500 block mb-1">STRESS</span><p id="avg-stress" class="text-2xl font-bold text-blue-400">0%</p></div>
-                <div class="bg-slate-900 p-4 rounded-2xl"><span class="text-[10px] text-slate-500 block mb-1">STATE</span><p id="peak-state" class="text-xl font-bold text-emerald-400">CALM</p></div>
-            </div>
-            <p id="report-advice" class="text-sm text-slate-400 italic mb-8"></p>
-            <button onclick="location.reload()" class="w-full bg-blue-600 font-bold py-4 rounded-2xl">NEW SESSION</button>
-        </div>
+      <!-- Emotion chips (built by JS) -->
+      <div id="emotion-chips" class="emotion-chips" aria-label="Detected emotions"></div>
     </div>
 
-    <script>
-        const video = document.getElementById('video');
-        const tutorText = document.getElementById('tutor-text');
-        const stressBar = document.getElementById('stress-bar');
-        const stressPercent = document.getElementById('stress-percent');
-        const stateText = document.getElementById('state-text');
-        const emotionTag = document.getElementById('emotion-tag');
-        const loaderOverlay = document.getElementById('loader-overlay');
-        const statusMsg = document.getElementById('status-msg');
-        const statusLight = document.getElementById('status-light');
-        
-        let stressData = [];
-        let sessionActive = false;
+    <!-- Right: Info Panels -->
+    <div class="right-col">
 
-        async function forceStart() {
-            try {
-                statusMsg.innerText = "Connecting...";
-                const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/';
-                
-                // Concurrent lightweight loading
-                await Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                    faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL)
-                ]);
+      <!-- AI Counselor -->
+      <div class="glass counselor-card">
+        <p class="card-label blue">AI Counselor</p>
+        <p id="tutor-text" style="transition: opacity 0.25s ease;">Ready to begin.</p>
+        <button id="end-btn" class="end-btn" onclick="endSession()">End Session</button>
+      </div>
 
-                loaderOverlay.style.opacity = '0';
-                setTimeout(() => loaderOverlay.style.display = 'none', 300);
-                startVideo();
-            } catch (e) {
-                statusMsg.innerText = "Error";
-            }
-        }
+      <!-- Cognitive Stress -->
+      <div class="glass stress-card">
+        <div class="stress-header">
+          <div>
+            <p class="card-label emerald">Cognitive Stress</p>
+            <p id="state-text">Standby</p>
+          </div>
+          <div id="stress-percent">0%</div>
+        </div>
+        <div class="bar-track">
+          <div id="stress-bar"></div>
+        </div>
+      </div>
 
-        function startVideo() {
-            navigator.mediaDevices.getUserMedia({ video: { width: 400, height: 300, frameRate: { ideal: 30 } } })
-                .then(stream => {
-                    video.srcObject = stream;
-                    sessionActive = true;
-                    document.getElementById('end-btn').classList.remove('hidden');
-                    statusMsg.innerText = "AI ACTIVE";
-                    statusLight.classList.replace('bg-yellow-500', 'bg-red-500');
-                    beginAnalysis();
-                });
-        }
+    </div>
+  </main>
+</div><!-- /app-wrapper -->
 
-        function beginAnalysis() {
-            // High-speed interval
-            setInterval(async () => {
-                if (!sessionActive || video.paused) return;
+<!-- ── Report Modal ── -->
+<div id="report-modal" role="dialog" aria-modal="true" aria-labelledby="report-title">
+  <div class="glass report-card">
+    <h2 id="report-title">Session Analytics</h2>
+    <p class="subtitle">Focus Report</p>
 
-                // Optimization: InputSize 128 is much faster than 512
-                const options = new faceapi.TinyFaceDetectorOptions({ inputSize: 128, scoreThreshold: 0.4 });
-                const detections = await faceapi.detectAllFaces(video, options).withFaceExpressions();
+    <div class="report-grid">
+      <div class="report-tile">
+        <span class="tile-label">Avg Stress</span>
+        <p id="avg-stress" class="tile-value blue">0%</p>
+      </div>
+      <div class="report-tile">
+        <span class="tile-label">Peak Stress</span>
+        <p id="peak-val" class="tile-value red">0%</p>
+      </div>
+      <div class="report-tile" style="grid-column: span 2">
+        <span class="tile-label">Overall State</span>
+        <p id="peak-state" class="tile-value emerald">FOCUSED</p>
+      </div>
+    </div>
 
-                if (detections && detections.length > 0) {
-                    const e = detections[0].expressions;
-                    // Formula to weigh 'Stress' higher for sensitivity
-                    const stressBase = (e.angry * 1.5) + (e.sad) + (e.fearful) + (e.disgusted * 0.5);
-                    const finalStress = Math.min(100, Math.round(stressBase * 100));
-                    
-                    stressData.push(finalStress);
-                    const dominant = Object.entries(e).sort((a,b) => b[1] - a[1])[0][0];
-                    emotionTag.innerText = dominant.toUpperCase();
-                    
-                    updateUI(finalStress, e.happy, dominant);
-                } else {
-                    stateText.innerText = "SEARCHING...";
-                    stateText.className = "text-xl font-bold mt-1 text-slate-600";
-                    emotionTag.innerText = "RE-CALIBRATING";
-                }
-            }, 300); // Super-fast 300ms update
-        }
+    <p id="report-advice"></p>
 
-        function updateUI(val, happy, emotion) {
-            stressPercent.innerText = `${val}%`;
-            stressBar.style.width = `${Math.max(8, val)}%`;
+    <button class="new-session-btn" onclick="location.reload()">NEW SESSION</button>
+  </div>
+</div>
 
-            if (val > 25) {
-                stateText.innerText = "FATIGUE ALERT";
-                stateText.className = "text-2xl font-black mt-1 text-red-400 italic";
-                tutorText.innerText = "तुमच्या चेहऱ्यावर ताण जाणवत आहे. एक छोटा ब्रेक घ्या! (Stress detected, take a break!)";
-                stressBar.className = "h-full bg-red-500 transition-all duration-300";
-            } else if (happy > 0.3) {
-                stateText.innerText = "FLOW STATE";
-                stateText.className = "text-2xl font-black mt-1 text-emerald-400 italic";
-                tutorText.innerText = "Excellent mood! Your retention is high right now.";
-                stressBar.className = "h-full bg-emerald-500 transition-all duration-300";
-            } else {
-                stateText.innerText = "CONCENTRATING";
-                stateText.className = "text-2xl font-black mt-1 text-blue-400 italic";
-                tutorText.innerText = "तुम्ही एकाग्र आहात. धड्याकडे लक्ष द्या! (You are focused, keep learning!)";
-                stressBar.className = "h-full bg-blue-500 transition-all duration-300";
-            }
-        }
-
-        function endSession() {
-            sessionActive = false;
-            const avg = stressData.length ? (stressData.reduce((a,b) => a + b) / stressData.length).toFixed(1) : 0;
-            document.getElementById('avg-stress').innerText = `${avg}%`;
-            document.getElementById('peak-state').innerText = avg > 25 ? "STRESSED" : "FOCUSED";
-            document.getElementById('report-advice').innerText = avg > 25 ? "You were stressed. Try pomodoro technique." : "Great session! Your focus was perfect.";
-            document.getElementById('report-modal').classList.remove('hidden');
-        }
-    </script>
+<!-- Your improved script -->
+<script src="script.js"></script>
 </body>
 </html>
