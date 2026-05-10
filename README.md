@@ -1,5 +1,4 @@
 # 🧠 AuraMind AI - Future of Learning & Well-being
-**Submission for Ignition HackVerse 2k26 | PVG’s COET&M, Pune**
 
 AuraMind is an AI-powered adaptive learning assistant that uses **Real-time Computer Vision** to monitor a student's emotional well-being.
 
