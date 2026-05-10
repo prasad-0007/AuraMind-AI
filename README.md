@@ -1,5 +1,7 @@
 # 🧠 AuraMind AI - Future of Learning & Well-being
 
+Live Link: https://prasad-0007.github.io/AuraMind-AI/
+
 AuraMind is an AI-powered adaptive learning assistant that uses **Real-time Computer Vision** to monitor a student's emotional well-being.
 
 ## 🚀 Key Innovation
